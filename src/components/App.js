@@ -7,6 +7,7 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Loader } from './Loader/Loader';
 import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
+import { Button } from './Button/Button';
 
 export class App extends Component {
   state = {
@@ -16,6 +17,7 @@ export class App extends Component {
     images: [],
     error: null,
     loading: false,
+    isBtnVisible: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -23,6 +25,9 @@ export class App extends Component {
     if (prevState.query !== query || prevState.page !== page) {
       imagesFind(query, page)
         .then(data => {
+          if (data.hits.length > 12) {
+            this.setState({ isBtnVisible: true });
+          }
           if (data.total === 0) {
             this.setState({ loading: false });
             return toast.info('Sorry, nothing was found for your search');
@@ -41,13 +46,20 @@ export class App extends Component {
       page: 1,
       images: [],
       loading: true,
+      isBtnVisible: false,
     });
   };
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+      loading: true,
+    }));
+  };
   render() {
-    const { images, loading } = this.state;
+    const { query, images, loading, isBtnVisible } = this.state;
     return (
       <>
-        <Searchbar onSubmit={this.handleSubmit} />
+        <Searchbar onSubmit={this.handleSubmit} query={query} />
         {images.length > 0 && (
           <ImageGallery>
             {images.map(image => (
@@ -56,6 +68,9 @@ export class App extends Component {
           </ImageGallery>
         )}
         {loading && <Loader />}
+        {images.length > 0 && !loading && !isBtnVisible && (
+          <Button onClick={this.loadMore} />
+        )}
         <GlobalStyle />
         <ToastContainer position="top-center" autoClose={2500} />
       </>

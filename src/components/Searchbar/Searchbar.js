@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { GrSearch } from 'react-icons/gr';
 
@@ -11,9 +12,16 @@ export class Searchbar extends Component {
     this.setState({ query: event.currentTarget.value.toLowerCase().trim() });
   };
   handleSubmit = event => {
+    const { query } = this.state;
     event.preventDefault();
-    if (this.state.query === '') {
+    if (query === '') {
       toast.warn('Enter a search query!');
+      return;
+    }
+    if (this.props.query === query) {
+      toast.warn(
+        'We have already found pictures for this request. Enter something else!'
+      );
       return;
     }
     this.props.onSubmit(this.state.query);
@@ -38,3 +46,7 @@ export class Searchbar extends Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  query: PropTypes.string.isRequired,
+};
