@@ -24,8 +24,14 @@ export class App extends Component {
     if (prevState.query !== query || prevState.page !== page) {
       imagesFind(query, page)
         .then(data => {
+          if (data.hits.length <= 12) {
+            this.setState({ isBtnVisible: false });
+          }
           if (data.hits.length > 12) {
             this.setState({ isBtnVisible: true });
+          }
+          if (data.hits.length <= 12) {
+            this.setState({ isBtnVisible: false });
           }
           if (data.total === 0) {
             this.setState({ loading: false });
