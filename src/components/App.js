@@ -1,7 +1,7 @@
+import { Component } from 'react';
 import { GlobalStyle } from './GlobalStyle';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { Component } from 'react';
 import { imagesFind } from './utils/pixabay';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
@@ -12,7 +12,6 @@ import { Button } from './Button/Button';
 export class App extends Component {
   state = {
     query: '',
-    data: null,
     page: 1,
     images: [],
     error: null,
@@ -30,14 +29,17 @@ export class App extends Component {
           }
           if (data.total === 0) {
             this.setState({ loading: false });
-            return toast.info('Sorry, nothing was found for your search');
+            return toast('Sorry, nothing was found for your search');
           }
           this.setState(prevState => ({
             images: [...prevState.images, ...data.hits],
             loading: false,
           }));
         })
-        .catch(error => this.setState({ error }));
+        .catch(error => {
+          this.setState({ loading: false });
+          return toast('Something went wrong! Please retry');
+        });
     }
   }
   handleSubmit = query => {

@@ -15,11 +15,11 @@ export class Searchbar extends Component {
     const { query } = this.state;
     event.preventDefault();
     if (query === '') {
-      toast.warn('Enter a search query!');
+      toast('Enter a search query!');
       return;
     }
     if (this.props.query === query) {
-      toast.warn(
+      toast(
         'We have already found pictures for this request. Enter something else!'
       );
       return;
