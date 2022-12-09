@@ -14,8 +14,8 @@ export class Searchbar extends Component {
     query: '',
   };
 
-  handleQueryChange = event => {
-    this.setState({ query: event.currentTarget.value.toLowerCase().trim() });
+  handleQueryChange = e => {
+    this.setState({ query: e.currentTarget.value.toLowerCase().trim() });
   };
   handleSubmit = event => {
     const { query } = this.state;
