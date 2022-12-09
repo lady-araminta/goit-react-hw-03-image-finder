@@ -2,6 +2,12 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { GrSearch } from 'react-icons/gr';
+import {
+  SearchBox,
+  SearchButton,
+  SearchForm,
+  SearchInput,
+} from './Searchbar.styled';
 
 export class Searchbar extends Component {
   state = {
@@ -29,20 +35,19 @@ export class Searchbar extends Component {
   };
   render() {
     return (
-      <header>
-        <form onSubmit={this.handleSubmit}>
-          <button type="submit">
+      <SearchBox>
+        <SearchForm onSubmit={this.handleSubmit}>
+          <SearchButton type="submit">
             <GrSearch />
-            <span>Search...</span>
-          </button>
-          <input
+          </SearchButton>
+          <SearchInput
             type="text"
             placeholder="Search images and photos"
             value={this.state.query}
             onChange={this.handleQueryChange}
           />
-        </form>
-      </header>
+        </SearchForm>
+      </SearchBox>
     );
   }
 }

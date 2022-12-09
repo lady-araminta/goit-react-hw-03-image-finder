@@ -1,9 +1,10 @@
 import { ThreeCircles } from 'react-loader-spinner';
+import { LoaderCont } from './Loader.styled';
 
 export const Loader = () => {
   return (
-    <div role="alert">
-      <ThreeCircles />
-    </div>
+    <LoaderCont role="alert">
+      <ThreeCircles color="#3f51b5" />
+    </LoaderCont>
   );
 };
