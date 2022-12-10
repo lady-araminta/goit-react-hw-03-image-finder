@@ -23,20 +23,18 @@ export class App extends Component {
     const { query, page } = this.state;
     if (prevState.query !== query || prevState.page !== page) {
       imagesFind(query, page)
-        .then(data => {
-          if (data.hits.length > 12) {
+        .then(({ hits, totalHits }) => {
+          if (hits.length > 12) {
             this.setState({ isBtnVisible: true });
           }
-          if (data.hits.length <= 12) {
-            this.setState({ isBtnVisible: false });
-          }
-          if (data.total === 0) {
+          if (totalHits === 0) {
             this.setState({ loading: false });
             return toast('Sorry, nothing was found for your search');
           }
           this.setState(prevState => ({
-            images: [...prevState.images, ...data.hits],
+            images: [...prevState.images, ...hits],
             loading: false,
+            totalHits,
           }));
         })
         .catch(error => {
@@ -59,9 +57,14 @@ export class App extends Component {
       page: prevState.page + 1,
       loading: true,
     }));
+    const { page, totalHits } = this.state;
+    const amountOfPages = totalHits / 12 - page;
+    if (amountOfPages < 0) {
+      this.setState({ isBtnVisible: false });
+    }
   };
   render() {
-    const { query, images, loading, isBtnVisible } = this.state;
+    const { query, images, loading, totalHits } = this.state;
     return (
       <>
         <Searchbar onSubmit={this.handleSubmit} query={query} />
@@ -73,7 +76,7 @@ export class App extends Component {
           </ImageGallery>
         )}
         {loading && <Loader />}
-        {images.length > 0 && !loading && !isBtnVisible && (
+        {images.length > 0 && images.length !== totalHits && !loading && (
           <Button onClick={this.loadMore} />
         )}
         <GlobalStyle />
